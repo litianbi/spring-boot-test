@@ -1,1 +1,44 @@
-111
+public class Test {
+
+    public static void main(String[] args) {
+        int[] nums = {0,3,4,-1,45,63};
+        System.out.println(calPercentile(nums,1));
+    }
+
+    /**
+     * 计算给定数组的百分位数
+     * @param nums 数组
+     * @param percentile 百分比
+     * @return 数组中的值 无结果返回-1
+     * 如果是大数组 关键是排序
+     * 思路：大数组切分成多个比较小的数组
+     *      每个小数组使用快速排序
+     *      再把每个小数组用归并排序合并
+     */
+    public static double calPercentile(int[] nums,double percentile){
+        //使用快排
+        Arrays.sort(nums);
+        if (percentile <= 0){
+            return nums[0];
+        }
+        if (percentile >= 1){
+            return nums[nums.length-1];
+        }
+        //计算下标
+        double i = nums.length * percentile;
+        //如果结果是整数 则是第i-1 和i的平均值 否则i向上取整
+        boolean isNumeric = isNumeric(String.valueOf(i));
+        int j;
+        if (isNumeric){
+            j = (int)i;
+            return (nums[j-1]+nums[j])/2.0;
+        }else {
+            j = (int) Math.ceil(i);
+        }
+        return (nums[j]);
+    }
+
+    private static boolean isNumeric(String str){
+        Pattern pattern = Pattern.compile("^[-\\+]?[.\\d]*$");
+        return pattern.matcher(str).matches();
+    }
